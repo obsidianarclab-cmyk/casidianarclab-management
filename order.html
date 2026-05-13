@@ -53,6 +53,18 @@ body{
   margin-top:5px;
 }
 
+/* 🔴 BLINK */
+.blink{
+  animation:blink 1s infinite;
+  border:2px solid red !important;
+}
+
+@keyframes blink{
+  0%{box-shadow:0 0 5px red;}
+  50%{box-shadow:0 0 20px red;}
+  100%{box-shadow:0 0 5px red;}
+}
+
 /* SEARCH */
 .searchBox{
   text-align:center;
@@ -128,7 +140,7 @@ select{
     <div class="count" id="total">0</div>
   </div>
 
-  <div class="card pending">
+  <div class="card pending" id="pendingCard">
     PENDING
     <div class="count" id="pending">0</div>
   </div>
@@ -154,10 +166,12 @@ select{
 <thead>
 <tr>
 <th>Order Id</th>
-<th>Date Time</th>
-<th>Customer</th>
-<th>Phone</th>
-<th>Receiver</th>
+<th>DateTime</th>
+<th>Customer Name</th>
+<th>Customer PhoneNo</th>
+<th>Receiver Name</th>
+<th>Receiver PhoneNo</th>
+<th>Address</th>
 <th>Status</th>
 <th>Receipt</th>
 <th>Action</th>
@@ -173,28 +187,24 @@ const URL = "https://script.google.com/macros/s/AKfycbzmTD4ct44yQVxZ2H6yoX8JYbSi
 
 let dataStore = [];
 
+/* DATE */
 function formatDateTime(dt){
   if(!dt) return "";
-  let d = new Date(dt);
-  return d.toLocaleString();
+  return new Date(dt).toLocaleString();
 }
 
-/* LOAD DATA */
+/* LOAD */
 function loadData(){
-
 fetch(URL)
 .then(res=>res.text())
 .then(text=>{
-
-dataStore = JSON.parse(text);
-updateDashboard();
-renderTable();
-
+  dataStore = JSON.parse(text);
+  updateDashboard();
+  renderTable();
 });
-
 }
 
-/* DASHBOARD COUNTS */
+/* DASHBOARD */
 function updateDashboard(){
 
 let total = dataStore.length;
@@ -207,6 +217,15 @@ document.getElementById("pending").innerText = pending;
 document.getElementById("progress").innerText = progress;
 document.getElementById("done").innerText = done;
 
+/* BLINK IF PENDING > 0 */
+let card = document.getElementById("pendingCard");
+
+if(pending > 0){
+  card.classList.add("blink");
+}else{
+  card.classList.remove("blink");
+}
+
 }
 
 /* TABLE */
@@ -218,11 +237,10 @@ let html = "";
 dataStore.forEach((r,i)=>{
 
 let text = (r.orderId+r.customerName+r.customerNo).toLowerCase();
-
 if(!text.includes(search)) return;
 
+/* STATUS COLOR */
 let bg = "#222";
-
 if(r.status==="Pending") bg="#7f1d1d";
 else if(r.status==="Progress") bg="#854d0e";
 else if(r.status==="Complete Order") bg="#14532d";
@@ -234,9 +252,12 @@ html += `
 <td>${r.customerName||""}</td>
 <td>${r.customerNo||""}</td>
 <td>${r.receiverName||""}</td>
+<td>${r.receiverPhone||""}</td>
+<td>${r.receiverAddress||""}</td>
+
 
 <td>
-<select style="background:${bg};color:white;font-weight:bold;">
+<select id="status-${i}" style="background:${bg};color:white;font-weight:bold;">
 <option ${r.status==="Pending"?"selected":""}>Pending</option>
 <option ${r.status==="Progress"?"selected":""}>Progress</option>
 <option ${r.status==="Complete Order"?"selected":""}>Complete Order</option>
@@ -248,14 +269,39 @@ html += `
 </td>
 
 <td>
-<button>Update</button>
+<button onclick="updateStatus(${i})">Update</button>
 </td>
 </tr>
 `;
-
 });
 
 document.getElementById("table").innerHTML = html;
+}
+
+/* UPDATE STATUS (IMPORTANT FIX) */
+function updateStatus(index){
+
+let newStatus = document.getElementById("status-"+index).value;
+
+fetch(URL,{
+  method:"POST",
+  headers:{
+    "Content-Type":"application/x-www-form-urlencoded"
+  },
+  body:new URLSearchParams({
+    action:"update",
+    orderId: dataStore[index].orderId,
+    status:newStatus
+  })
+})
+.then(res=>res.text())
+.then(res=>{
+  alert("Updated!");
+  loadData();
+})
+.catch(err=>{
+  alert("Error updating");
+});
 
 }
 
