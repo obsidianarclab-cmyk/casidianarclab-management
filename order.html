@@ -28,7 +28,7 @@ body{
   margin:5px 0 0;
 }
 
-/* ORDER COUNT BOX */
+/* ORDER COUNT */
 .countBox{
   text-align:center;
   margin-top:15px;
@@ -72,12 +72,11 @@ button:hover{
 select{
   padding:5px;
   border-radius:5px;
-  background:#111;
   color:white;
   border:1px solid #444;
   font-size:12px;
+  font-weight:bold;
 }
-
 </style>
 </head>
 
@@ -88,7 +87,6 @@ select{
 <p>ORDER MANAGEMENT SYSTEM</p>
 </div>
 
-<!-- ✅ ORDER COUNT DISPLAY -->
 <div class="countBox">
 Total Orders: <span id="orderCount">0</span>
 </div>
@@ -99,9 +97,9 @@ Total Orders: <span id="orderCount">0</span>
 <th>Order Id</th>
 <th>Date Time</th>
 <th>Customer Name</th>
-<th>Customer Phone</th>
+<th>Customer Phone No.</th>
 <th>Receiver Name</th>
-<th>Receiver Phone</th>
+<th>Receiver Phone No.</th>
 <th>Receiver Address</th>
 <th>Receipt</th>
 <th>Status</th>
@@ -145,11 +143,18 @@ fetch(URL)
 let data = JSON.parse(text);
 dataStore = data;
 
-document.getElementById("orderCount").innerText = data.length; // ✅ COUNT HERE
+document.getElementById("orderCount").innerText = data.length;
 
 let html = "";
 
 data.forEach((r, index) => {
+
+/* 🔥 DARK STATUS COLORS ONLY */
+let bg = "#222";
+
+if(r.status === "Pending") bg = "#7f1d1d";      // dark red
+else if(r.status === "Progress") bg = "#854d0e"; // dark yellow (amber)
+else if(r.status === "Complete Order") bg = "#14532d"; // dark green
 
 html += `
 <tr>
@@ -169,10 +174,18 @@ ${r.receiverAddress || ""}
 </td>
 
 <td>
-<select id="status-${index}">
-<option ${r.status=="Pending"?"selected":""}>Pending</option>
-<option ${r.status=="Progress"?"selected":""}>Progress</option>
-<option ${r.status=="Complete Order"?"selected":""}>Complete Order</option>
+<select id="status-${index}" style="
+  background:${bg};
+  color:white;
+  padding:5px;
+  border-radius:5px;
+  border:1px solid #444;
+  font-size:12px;
+  font-weight:bold;
+">
+  <option style="color:black" ${r.status=="Pending"?"selected":""}>Pending</option>
+  <option style="color:black" ${r.status=="Progress"?"selected":""}>Progress</option>
+  <option style="color:black" ${r.status=="Complete Order"?"selected":""}>Complete Order</option>
 </select>
 </td>
 
