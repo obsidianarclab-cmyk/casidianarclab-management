@@ -1,134 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Casidian Arc Lab - Expense Tracker</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: #fff;
-    }
+<meta charset="UTF-8">
+<title>Casidian Arc Lab - Expense Tracker</title>
 
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 20px;
-    }
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #0b0f14; /* black */
+  color: #ffffff; /* white */
+}
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #38bdf8;
-    }
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
 
-    .card {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      margin-bottom: 15px;
-    }
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #c2a66b; /* khaki */
+  letter-spacing: 2px;
+}
 
-    input, select {
-      padding: 10px;
-      margin: 5px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      width: 22%;
-    }
+/* CARD */
+.card {
+  background: #111;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  margin-bottom: 15px;
+}
 
-    button {
-      padding: 8px 12px;
-      margin: 2px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
+/* INPUT */
+input, select {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  outline: none;
+  width: 22%;
+  background: #0b0f14;
+  color: white;
+}
 
-    .add-btn { background: #22c55e; color: white; }
-    .add-btn:hover { background: #16a34a; }
+/* BUTTONS */
+button {
+  padding: 8px 12px;
+  margin: 2px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
 
-    .download-btn { background: #3b82f6; color: white; }
-    .download-btn:hover { background: #2563eb; }
+.add-btn { 
+  background: #c2a66b; 
+  color: black; 
+}
 
-    .edit-btn { background: #facc15; color: black; }
-    .delete-btn { background: #ef4444; color: white; }
+.add-btn:hover { 
+  background: #e0c27a; 
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      overflow: hidden;
-    }
+.download-btn { 
+  background: #444; 
+  color: white; 
+}
 
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
+.download-btn:hover { 
+  background: #666; 
+}
 
-    th {
-      background: rgba(56,189,248,0.2);
-      color: #38bdf8;
-    }
+.edit-btn { 
+  background: #c2a66b; 
+  color: black; 
+}
 
-    h3 {
-      text-align: right;
-      color: #facc15;
-    }
-  </style>
+.delete-btn { 
+  background: #8b0000; 
+  color: white; 
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background: #111;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+/* HEADER */
+th {
+  background: #000;
+  color: #c2a66b;
+}
+
+/* TOTAL */
+h3 {
+  text-align: right;
+  color: #c2a66b;
+}
+
+</style>
 </head>
+
 <body>
 
 <div class="container">
 
-  <h2>💰 Casidian Arc Lab Expense Tracker</h2>
+<h2>💰 Casidian Arc Lab Expense Tracker</h2>
 
-  <div class="card">
-    <input id="product" placeholder="Product Name">
-    <input id="amount" type="number" placeholder="Amount (RM)">
-    <input id="date" type="date">
+<div class="card">
+<input id="product" placeholder="Product Name">
+<input id="amount" type="number" placeholder="Amount (RM)">
+<input id="date" type="date">
 
-    <select id="paidType" onchange="toggleOwnerInput()">
-      <option value="Company">Company</option>
-      <option value="Own">Own</option>
-    </select>
+<select id="paidType" onchange="toggleOwnerInput()">
+<option value="Company">Company</option>
+<option value="Own">Own</option>
+</select>
 
-    <input id="ownerName" placeholder="Owner Name (if Own)" style="display:none;">
-    <input id="remark" placeholder="Remark (optional)">
+<input id="ownerName" placeholder="Owner Name (if Own)" style="display:none;">
+<input id="remark" placeholder="Remark (optional)">
 
-    <br>
-    <button class="add-btn" onclick="addOrUpdate()">➕ Add / Update</button>
-    <button class="download-btn" onclick="downloadExcel()">📥 Download Excel</button>
+<br>
+<button class="add-btn" onclick="addOrUpdate()">➕ Add / Update</button>
+<button class="download-btn" onclick="downloadExcel()">📥 Download Excel</button>
 
-    <br><br>
-    <input type="file" id="fileInput" accept=".csv" onchange="loadFile(event)">
-  </div>
+<br><br>
+<input type="file" id="fileInput" accept=".csv" onchange="loadFile(event)">
+</div>
 
-  <h3>Total: RM <span id="total">0</span></h3>
+<h3>Total: RM <span id="total">0</span></h3>
 
-  <div class="card">
-    <table>
-      <thead>
-        <tr>
-          <th>Product</th>
-          <th>Amount</th>
-          <th>Date</th>
-          <th>Paid By</th>
-          <th>Remark</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="table"></tbody>
-    </table>
-  </div>
+<div class="card">
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Amount</th>
+<th>Date</th>
+<th>Paid By</th>
+<th>Remark</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+</div>
 
 </div>
 
@@ -137,7 +169,8 @@ let data = [];
 let editIndex = -1;
 
 function toggleOwnerInput() {
-  document.getElementById("ownerName").style.display = (paidType.value === "Own") ? "inline-block" : "none";
+  document.getElementById("ownerName").style.display =
+    (paidType.value === "Own") ? "inline-block" : "none";
 }
 
 function render() {
