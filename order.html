@@ -28,6 +28,14 @@ body{
   margin:5px 0 0;
 }
 
+/* ORDER COUNT BOX */
+.countBox{
+  text-align:center;
+  margin-top:15px;
+  font-size:14px;
+  color:#c2a66b;
+}
+
 /* TABLE */
 table{
   width:100%;
@@ -35,7 +43,6 @@ table{
   margin-top:20px;
 }
 
-/* ❗ HEADER ROW (NO CHANGE) */
 th{
   padding:10px;
   text-align:center;
@@ -43,15 +50,13 @@ th{
   color:#c2a66b;
 }
 
-/* ✅ ONLY DATA ROW SMALL */
 td{
   padding:8px;
   text-align:center;
   border-bottom:1px solid #333;
-  font-size:12px;   /* 👈 ONLY THIS SMALL */
+  font-size:12px;
 }
 
-/* BUTTON */
 button{
   padding:6px 10px;
   border-radius:5px;
@@ -64,7 +69,6 @@ button:hover{
   background:#e0c27a;
 }
 
-/* SELECT */
 select{
   padding:5px;
   border-radius:5px;
@@ -82,6 +86,11 @@ select{
 <div class="header">
 <h2>OBSIDIAN ARC LAB</h2>
 <p>ORDER MANAGEMENT SYSTEM</p>
+</div>
+
+<!-- ✅ ORDER COUNT DISPLAY -->
+<div class="countBox">
+Total Orders: <span id="orderCount">0</span>
 </div>
 
 <table>
@@ -109,6 +118,7 @@ const URL = "https://script.google.com/macros/s/AKfycbzmTD4ct44yQVxZ2H6yoX8JYbSi
 
 let dataStore = [];
 
+/* FORMAT DATE */
 function formatDateTime(dt) {
   if (!dt) return "";
 
@@ -125,6 +135,7 @@ function formatDateTime(dt) {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
+/* LOAD DATA */
 function loadData(){
 
 fetch(URL)
@@ -133,6 +144,8 @@ fetch(URL)
 
 let data = JSON.parse(text);
 dataStore = data;
+
+document.getElementById("orderCount").innerText = data.length; // ✅ COUNT HERE
 
 let html = "";
 
@@ -177,6 +190,7 @@ document.getElementById("table").innerHTML = html;
 
 }
 
+/* OPEN RECEIPT */
 function openReceipt(index){
 
 let url = dataStore[index].receiptLink;
@@ -189,6 +203,7 @@ if(!url || url.trim() === ""){
 window.open(url.trim(), "_blank");
 }
 
+/* UPDATE STATUS */
 function updateStatus(index){
 
 let newStatus = document.getElementById("status-"+index).value;
